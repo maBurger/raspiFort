@@ -1,13 +1,15 @@
 #! /usr/bin/python3
 
-import re, os, time
+import re
+import time
 import urllib.parse
 import urllib.request
 
-def SendHTTPMessage( Value ):
+
+def SendHTTPMessage(Value):
     url = "https://api.thingspeak.com/update"
 
-    params = urllib.parse.urlencode({'field1': Value, 'key':'NQOZ5AFSZNUL6V5M'})
+    params = urllib.parse.urlencode({'field1': Value, 'key': 'changeToYourAPIKey'})
     params = params.encode('utf-8')
 
     req = urllib.request.Request(url, params)
@@ -22,22 +24,22 @@ def SendHTTPMessage( Value ):
 def read_sensor(path):
     value = "U"
     try:
-      f = open(path, "r")
-      line = f.readline()
-      if re.match(r"([0-9a-f]{2} ){9}: crc=[0-9a-f]{2} YES", line):
+        f = open(path, "r")
         line = f.readline()
-        m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
-        if m:
-          value = str(float(m.group(2)) / 1000.0)
-      f.close()
-    except (IOError, e):
-      print(time.strftime("%x %X"), "Error reading", path, ": ", e)
+        if re.match(r"([0-9a-f]{2} ){9}: crc=[0-9a-f]{2} YES", line):
+            line = f.readline()
+            m = re.match(r"([0-9a-f]{2} ){9}t=([+-]?[0-9]+)", line)
+            if m:
+                value = str(float(m.group(2)) / 1000.0)
+        f.close()
+    except IOError as e:
+        print(time.strftime("%x %X"), "Error reading", path, ": ", e)
     return value
 
 
 # define pathes to 1-wire sensor data
 pathes = (
-  "/sys/bus/w1/devices/28-00000577c27b/w1_slave",
+    '/sys/bus/w1/devices/yourTemperatureChipID/w1_slave',
 )
 
 if __name__ == "__main__":
