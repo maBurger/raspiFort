@@ -1,3 +1,6 @@
+'''
+Modul zum Lesen der Temperatur des 1-wire Sensors
+'''
 import re, os, time
 
 # function: read and parse sensor data file
